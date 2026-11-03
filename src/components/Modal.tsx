@@ -29,7 +29,7 @@ export default function Modal({ title, icon, onClose, children }: Props) {
             {icon && <i className={`bi ${icon}`} />}
             {title}
           </h2>
-          <button onClick={onClose} className="icon-btn text-slate-500 hover:bg-slate-100" aria-label="Cerrar">
+          <button onClick={onClose} className="icon-btn text-slate-500 hover:bg-slate-100" aria-label="Close">
             <i className="bi bi-x-lg" />
           </button>
         </div>

@@ -20,24 +20,24 @@ export default function WalletsPage() {
     <>
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-navy-900">Mis billeteras</h2>
+          <h2 className="text-2xl font-bold text-navy-900">My wallets</h2>
           <p className="text-sm text-slate-500">
-            Saldo total: <span className="font-semibold text-navy-800">{formatCRC(grandTotal)}</span>
+            Total balance: <span className="font-semibold text-navy-800">{formatCRC(grandTotal)}</span>
           </p>
         </div>
         <button className="btn-primary" onClick={() => setModal({ kind: 'create' })}>
-          <i className="bi bi-plus-lg" /> Nueva billetera
+          <i className="bi bi-plus-lg" /> New wallet
         </button>
       </div>
 
       {wallets.length === 0 ? (
         <EmptyState
           icon="bi-wallet2"
-          title="Aún no tienes billeteras"
-          text="Crea una billetera (por ejemplo «Usuario 1») para empezar a registrar tus tarjetas, efectivo y gastos."
+          title="You have no wallets yet"
+          text="Create a wallet (for example &quot;User 1&quot;) to start tracking your cards, cash and expenses."
           action={
             <button className="btn-primary" onClick={() => setModal({ kind: 'create' })}>
-              <i className="bi bi-plus-lg" /> Crear billetera
+              <i className="bi bi-plus-lg" /> Create wallet
             </button>
           }
         />
@@ -62,14 +62,14 @@ export default function WalletsPage() {
                   <div className="flex gap-1" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                     <button
                       className="icon-btn text-slate-500 hover:bg-navy-50 hover:text-navy-700"
-                      title="Editar"
+                      title="Edit"
                       onClick={() => setModal({ kind: 'edit', wallet: w })}
                     >
                       <i className="bi bi-pencil" />
                     </button>
                     <button
                       className="icon-btn text-slate-500 hover:bg-red-50 hover:text-red-600"
-                      title="Eliminar"
+                      title="Delete"
                       onClick={() => setModal({ kind: 'delete', wallet: w })}
                     >
                       <i className="bi bi-trash3" />
@@ -81,11 +81,11 @@ export default function WalletsPage() {
                 <div className="mt-4 flex items-center gap-4 border-t border-slate-100 pt-3 text-sm text-slate-500">
                   <span>
                     <i className="bi bi-credit-card mr-1" />
-                    {cards} {cards === 1 ? 'tarjeta' : 'tarjetas'}
+                    {cards} {cards === 1 ? 'card' : 'cards'}
                   </span>
                   <span>
                     <i className="bi bi-cash-stack mr-1" />
-                    {hasCash ? 'Con efectivo' : 'Sin efectivo'}
+                    {hasCash ? 'Has cash' : 'No cash'}
                   </span>
                   <i className="bi bi-chevron-right ml-auto text-navy-400 transition group-hover:translate-x-1" />
                 </div>
@@ -105,11 +105,11 @@ export default function WalletsPage() {
       )}
       {modal?.kind === 'delete' && (
         <ConfirmDialog
-          title="Eliminar billetera"
+          title="Delete wallet"
           message={
             <>
-              ¿Seguro que deseas eliminar <strong>{modal.wallet.name}</strong>? Se borrarán también todas sus tarjetas,
-              efectivo e historial. Esta acción no se puede deshacer.
+              Are you sure you want to delete <strong>{modal.wallet.name}</strong>? All its cards, cash and history will
+              also be deleted. This action cannot be undone.
             </>
           }
           onConfirm={() => deleteWallet(modal.wallet.id)}

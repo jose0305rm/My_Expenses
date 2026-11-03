@@ -3,9 +3,9 @@ import type { Account, AccountType, CardColor, TransactionType, Wallet } from '.
 import { getBalance, uid } from './utils';
 
 /**
- * Los datos se guardan en el localStorage del navegador de cada visitante.
- * Así, quien abra el proyecto desde el portafolio solo ve SUS datos y nadie
- * más puede verlos (no hay servidor ni base de datos compartida).
+ * Data is stored in each visitor's browser localStorage.
+ * Anyone opening the project from the portfolio only sees THEIR own data and
+ * nobody else can see it (there is no server or shared database).
  */
 const STORAGE_KEY = 'control-gastos:data:v1';
 
@@ -34,7 +34,7 @@ export interface TransactionInput {
   description: string;
 }
 
-/** null = éxito, string = mensaje de error */
+/** null = success, string = error message */
 type Result = string | null;
 
 interface Store {
@@ -52,7 +52,7 @@ interface Store {
 
 const StoreContext = createContext<Store | null>(null);
 
-const NEGATIVE_ERROR = 'Operación no permitida: la cuenta quedaría con saldo negativo.';
+const NEGATIVE_ERROR = 'Not allowed: the account balance would become negative.';
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [wallets, setWallets] = useState<Wallet[]>(load);
@@ -61,7 +61,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(wallets));
   }, [wallets]);
 
-  // Sincroniza si el usuario tiene la app abierta en varias pestañas
+  // Keep in sync if the app is open in several tabs
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY) setWallets(load());
@@ -73,10 +73,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const findAccount = (walletId: string, accountId: string) =>
     wallets.find((w) => w.id === walletId)?.accounts.find((a) => a.id === accountId);
 
-  /** Aplica un cambio a una cuenta validando que el saldo nunca quede negativo. */
+  /** Applies a change to an account, making sure the balance never goes negative. */
   const mutateAccount = (walletId: string, accountId: string, fn: (a: Account) => Account): Result => {
     const current = findAccount(walletId, accountId);
-    if (!current) return 'La cuenta no existe.';
+    if (!current) return 'Account not found.';
     const next = fn(current);
     if (getBalance(next) < 0) return NEGATIVE_ERROR;
     setWallets((ws) =>
@@ -100,10 +100,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     addAccount: (walletId, type, data) => {
       const wallet = wallets.find((w) => w.id === walletId);
-      if (!wallet) return 'La billetera no existe.';
+      if (!wallet) return 'Wallet not found.';
       if (type === 'cash' && wallet.accounts.some((a) => a.type === 'cash'))
-        return 'Esta billetera ya tiene una cuenta de efectivo.';
-      if (data.initialBalance < 0) return 'El monto inicial no puede ser negativo.';
+        return 'This wallet already has a cash account.';
+      if (data.initialBalance < 0) return 'The starting balance cannot be negative.';
       const account: Account = {
         id: uid(),
         type,
@@ -133,7 +133,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       ),
 
     addTransaction: (walletId, accountId, data) => {
-      if (data.amount <= 0) return 'El monto debe ser mayor a cero.';
+      if (data.amount <= 0) return 'Amount must be greater than zero.';
       return mutateAccount(walletId, accountId, (a) => ({
         ...a,
         transactions: [...a.transactions, { ...data, description: data.description.trim(), id: uid(), createdAt: Date.now() }],
@@ -141,7 +141,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     },
 
     updateTransaction: (walletId, accountId, txId, data) => {
-      if (data.amount <= 0) return 'El monto debe ser mayor a cero.';
+      if (data.amount <= 0) return 'Amount must be greater than zero.';
       return mutateAccount(walletId, accountId, (a) => ({
         ...a,
         transactions: a.transactions.map((t) =>
@@ -162,6 +162,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
 export function useStore(): Store {
   const ctx = useContext(StoreContext);
-  if (!ctx) throw new Error('useStore debe usarse dentro de <StoreProvider>');
+  if (!ctx) throw new Error('useStore must be used inside <StoreProvider>');
   return ctx;
 }

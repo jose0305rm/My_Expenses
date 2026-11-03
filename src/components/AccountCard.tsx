@@ -9,7 +9,7 @@ interface Props {
   large?: boolean;
 }
 
-/** Representación visual de una tarjeta o de la cuenta de efectivo. */
+/** Visual representation of a card or the cash account. */
 export default function AccountCard({ account, onClick, actions, large }: Props) {
   const isCash = account.type === 'cash';
   const balance = getBalance(account);
@@ -24,13 +24,13 @@ export default function AccountCard({ account, onClick, actions, large }: Props)
         CARD_COLORS[account.color].gradient
       } ${onClick ? 'cursor-pointer transition hover:-translate-y-1 hover:shadow-2xl' : ''} ${large ? 'max-w-md' : ''}`}
     >
-      {/* Decoración */}
+      {/* Decoration */}
       <div className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/10" />
       <div className="pointer-events-none absolute -bottom-16 -left-8 h-40 w-40 rounded-full bg-white/5" />
 
       <div className="relative flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="text-xs tracking-wider text-white/70 uppercase">{isCash ? 'Efectivo' : 'Tarjeta'}</p>
+          <p className="text-xs tracking-wider text-white/70 uppercase">{isCash ? 'Cash' : 'Card'}</p>
           <p className="truncate text-lg font-semibold">{account.name}</p>
         </div>
         <div className="flex items-center gap-1">
@@ -47,14 +47,14 @@ export default function AccountCard({ account, onClick, actions, large }: Props)
       )}
 
       <div className="relative">
-        <p className="text-xs text-white/70">Saldo disponible</p>
+        <p className="text-xs text-white/70">Available balance</p>
         <p className={`font-bold tracking-tight ${large ? 'text-3xl' : 'text-2xl'}`}>{formatCRC(balance)}</p>
       </div>
     </div>
   );
 }
 
-/** Botón de acción pequeño para usar sobre las tarjetas (no propaga el click). */
+/** Small action button used on top of cards (does not propagate the click). */
 export function CardAction({ icon, label, onClick }: { icon: string; label: string; onClick: () => void }) {
   return (
     <button

@@ -2,7 +2,7 @@ export type AccountType = 'card' | 'cash';
 export type TransactionType = 'expense' | 'deposit';
 export type CardColor = 'navy' | 'slate' | 'emerald' | 'purple' | 'rose' | 'amber';
 
-/** Todos los montos se guardan en céntimos (enteros) para evitar errores de redondeo. */
+/** All amounts are stored in cents (integers) to avoid rounding errors. */
 export interface Transaction {
   id: string;
   type: TransactionType;

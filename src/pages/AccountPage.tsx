@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useStore } from '../store';
 import type { Transaction, TransactionType } from '../types';
-import { formatCRC, formatDate, getBalance } from '../utils';
+import { formatCRC, formatDate, formatTimestamp, getBalance } from '../utils';
 import { paths } from '../router';
 import AccountCard from '../components/AccountCard';
 import TransactionForm from '../components/TransactionForm';
@@ -35,9 +35,9 @@ export default function AccountPage({ walletId, accountId }: { walletId: string;
     .sort((a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt);
 
   const filters: { key: Filter; label: string }[] = [
-    { key: 'all', label: 'Todos' },
-    { key: 'expense', label: 'Gastos' },
-    { key: 'deposit', label: 'Abonos' },
+    { key: 'all', label: 'All' },
+    { key: 'expense', label: 'Expenses' },
+    { key: 'deposit', label: 'Deposits' },
   ];
 
   return (
@@ -50,35 +50,35 @@ export default function AccountPage({ walletId, accountId }: { walletId: string;
       </a>
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,26rem)_1fr]">
-        {/* Columna izquierda: tarjeta + resumen */}
+        {/* Left column: card + summary */}
         <div className="space-y-5">
           <AccountCard account={account} large />
 
           <div className="grid grid-cols-2 gap-3">
             <button className="btn-danger py-3" onClick={() => setModal({ kind: 'create', type: 'expense' })}>
-              <i className="bi bi-dash-circle" /> Registrar gasto
+              <i className="bi bi-dash-circle" /> Add expense
             </button>
             <button className="btn-success py-3" onClick={() => setModal({ kind: 'create', type: 'deposit' })}>
-              <i className="bi bi-plus-circle" /> Agregar saldo
+              <i className="bi bi-plus-circle" /> Add funds
             </button>
           </div>
 
           <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h3 className="font-semibold text-navy-900">Resumen</h3>
-            <SummaryRow label="Monto inicial" value={formatCRC(account.initialBalance)} />
-            <SummaryRow label="Total abonos" value={`+ ${formatCRC(totalDeposits)}`} className="text-emerald-600" />
-            <SummaryRow label="Total gastos" value={`- ${formatCRC(totalExpenses)}`} className="text-red-600" />
+            <h3 className="font-semibold text-navy-900">Summary</h3>
+            <SummaryRow label="Starting balance" value={formatCRC(account.initialBalance)} />
+            <SummaryRow label="Total deposits" value={`+ ${formatCRC(totalDeposits)}`} className="text-emerald-600" />
+            <SummaryRow label="Total expenses" value={`- ${formatCRC(totalExpenses)}`} className="text-red-600" />
             <div className="border-t border-slate-100 pt-3">
-              <SummaryRow label="Saldo actual" value={formatCRC(balance)} className="text-lg font-bold text-navy-900" />
+              <SummaryRow label="Current balance" value={formatCRC(balance)} className="text-lg font-bold text-navy-900" />
             </div>
           </div>
         </div>
 
-        {/* Columna derecha: historial */}
+        {/* Right column: history */}
         <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="flex flex-col gap-3 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between">
             <h3 className="flex items-center gap-2 text-lg font-semibold text-navy-900">
-              <i className="bi bi-clock-history" /> Historial de gastos y abonos
+              <i className="bi bi-clock-history" /> Expense and deposit history
             </h3>
             <div className="flex rounded-lg bg-slate-100 p-1 text-sm">
               {filters.map((f) => (
@@ -110,7 +110,7 @@ export default function AccountPage({ walletId, accountId }: { walletId: string;
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium text-slate-800">{t.description}</p>
                     <p className="text-xs text-slate-500">
-                      {formatDate(t.date)} · {isExpense ? 'Gasto' : 'Abono'}
+                      {formatDate(t.date)} · {isExpense ? 'Expense' : 'Deposit'}
                     </p>
                   </div>
                   <p className={`shrink-0 font-semibold ${isExpense ? 'text-red-600' : 'text-emerald-600'}`}>
@@ -119,14 +119,14 @@ export default function AccountPage({ walletId, accountId }: { walletId: string;
                   <div className="flex shrink-0 gap-1 opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100">
                     <button
                       className="icon-btn text-slate-500 hover:bg-navy-50 hover:text-navy-700"
-                      title="Editar"
+                      title="Edit"
                       onClick={() => setModal({ kind: 'edit', tx: t })}
                     >
                       <i className="bi bi-pencil" />
                     </button>
                     <button
                       className="icon-btn text-slate-500 hover:bg-red-50 hover:text-red-600"
-                      title="Eliminar"
+                      title="Delete"
                       onClick={() => setModal({ kind: 'delete', tx: t })}
                     >
                       <i className="bi bi-trash3" />
@@ -136,21 +136,17 @@ export default function AccountPage({ walletId, accountId }: { walletId: string;
               );
             })}
 
-            {/* Monto inicial siempre al final del historial */}
+            {/* Starting balance always at the end of the history */}
             {filter !== 'expense' && (
               <li className="flex items-center gap-4 bg-slate-50/60 px-5 py-4">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-lg text-emerald-600">
                   <i className="bi bi-flag" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-medium text-slate-800">Monto inicial</p>
+                  <p className="font-medium text-slate-800">Starting balance</p>
                   <p className="text-xs text-slate-500">
-                    {new Date(account.createdAt).toLocaleDateString('es-CR', {
-                      day: '2-digit',
-                      month: 'short',
-                      year: 'numeric',
-                    })}{' '}
-                    · Apertura
+                    {formatTimestamp(account.createdAt)}{' '}
+                    · Opening
                   </p>
                 </div>
                 <p className="shrink-0 font-semibold text-emerald-600">+ {formatCRC(account.initialBalance)}</p>
@@ -162,7 +158,7 @@ export default function AccountPage({ walletId, accountId }: { walletId: string;
           {history.length === 0 && filter === 'expense' && (
             <p className="px-5 py-10 text-center text-sm text-slate-500">
               <i className="bi bi-inbox mb-2 block text-3xl text-slate-300" />
-              Aún no hay gastos registrados.
+              No expenses recorded yet.
             </p>
           )}
         </section>
@@ -187,10 +183,10 @@ export default function AccountPage({ walletId, accountId }: { walletId: string;
       )}
       {modal?.kind === 'delete' && (
         <ConfirmDialog
-          title={modal.tx.type === 'expense' ? 'Eliminar gasto' : 'Eliminar abono'}
+          title={modal.tx.type === 'expense' ? 'Delete expense' : 'Delete deposit'}
           message={
             <>
-              ¿Eliminar <strong>{modal.tx.description}</strong> por{' '}
+              Delete <strong>{modal.tx.description}</strong> for{' '}
               <strong className={modal.tx.type === 'expense' ? 'text-red-600' : 'text-emerald-600'}>
                 {formatCRC(modal.tx.amount)}
               </strong>

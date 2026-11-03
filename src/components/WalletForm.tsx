@@ -15,21 +15,21 @@ export default function WalletForm({ initialName = '', onSubmit, onClose }: Prop
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return setError('El nombre es obligatorio.');
+    if (!name.trim()) return setError('Name is required.');
     onSubmit(name);
     onClose();
   };
 
   return (
-    <Modal title={editing ? 'Editar billetera' : 'Nueva billetera'} icon="bi-wallet2" onClose={onClose}>
+    <Modal title={editing ? 'Edit wallet' : 'New wallet'} icon="bi-wallet2" onClose={onClose}>
       <form onSubmit={handleSubmit}>
         <label className="label" htmlFor="wallet-name">
-          Nombre
+          Name
         </label>
         <input
           id="wallet-name"
           className="input"
-          placeholder="Ej: Usuario 1, Personal, Hogar…"
+          placeholder="e.g. User 1, Personal, Home…"
           value={name}
           maxLength={40}
           autoFocus
@@ -38,10 +38,10 @@ export default function WalletForm({ initialName = '', onSubmit, onClose }: Prop
         {error && <ErrorAlert message={error} />}
         <div className="mt-6 flex justify-end gap-2">
           <button type="button" className="btn-secondary" onClick={onClose}>
-            Cancelar
+            Cancel
           </button>
           <button type="submit" className="btn-primary">
-            <i className="bi bi-check-lg" /> {editing ? 'Guardar' : 'Crear'}
+            <i className="bi bi-check-lg" /> {editing ? 'Save' : 'Create'}
           </button>
         </div>
       </form>

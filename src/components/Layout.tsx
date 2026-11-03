@@ -11,15 +11,15 @@ export default function Layout({ children }: { children: ReactNode }) {
               <i className="bi bi-wallet2" />
             </span>
             <div>
-              <h1 className="text-lg leading-tight font-bold">Control de Gastos</h1>
-              <p className="text-xs text-navy-200">Colones costarricenses (₡)</p>
+              <h1 className="text-lg leading-tight font-bold">Expense Tracker</h1>
+              <p className="text-xs text-navy-200">Costa Rican colones (₡)</p>
             </div>
           </a>
           <span
             className="hidden items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs text-navy-100 sm:flex"
-            title="La información se guarda únicamente en este navegador"
+            title="Your data is stored only in this browser"
           >
-            <i className="bi bi-shield-lock" /> Datos privados en tu navegador
+            <i className="bi bi-shield-lock" /> Private data in your browser
           </span>
         </div>
       </header>
@@ -28,7 +28,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
       <footer className="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500">
         <i className="bi bi-lock-fill mr-1" />
-        Tus datos se guardan solo en este dispositivo (localStorage). Nadie más puede verlos.
+        Your data is stored only on this device (localStorage). Nobody else can see it.
       </footer>
     </div>
   );

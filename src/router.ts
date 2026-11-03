@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 
 /**
- * Router mínimo basado en el hash de la URL (#/...).
- * Funciona en cualquier hosting estático (GitHub Pages, Netlify, Vercel)
- * sin configuración extra.
+ * Minimal router based on the URL hash (#/...).
+ * Works on any static hosting (GitHub Pages, Netlify, Vercel) with no extra setup.
  */
 export type Route =
   | { name: 'wallets' }
@@ -12,8 +11,8 @@ export type Route =
 
 function parse(hash: string): Route {
   const parts = hash.replace(/^#\/?/, '').split('/').filter(Boolean);
-  if (parts[0] === 'billetera' && parts[1]) {
-    if (parts[2] === 'cuenta' && parts[3]) return { name: 'account', walletId: parts[1], accountId: parts[3] };
+  if (parts[0] === 'wallet' && parts[1]) {
+    if (parts[2] === 'account' && parts[3]) return { name: 'account', walletId: parts[1], accountId: parts[3] };
     return { name: 'wallet', walletId: parts[1] };
   }
   return { name: 'wallets' };
@@ -34,8 +33,8 @@ export function useRoute(): Route {
 
 export const paths = {
   wallets: () => '#/',
-  wallet: (walletId: string) => `#/billetera/${walletId}`,
-  account: (walletId: string, accountId: string) => `#/billetera/${walletId}/cuenta/${accountId}`,
+  wallet: (walletId: string) => `#/wallet/${walletId}`,
+  account: (walletId: string, accountId: string) => `#/wallet/${walletId}/account/${accountId}`,
 };
 
 export const navigate = (path: string) => {

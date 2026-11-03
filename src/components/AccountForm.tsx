@@ -8,14 +8,14 @@ import { CARD_COLORS, centsToInput, parseAmount } from '../utils';
 interface Props {
   type: AccountType;
   account?: Account;
-  /** Devuelve un mensaje de error o null si se guardó correctamente. */
+  /** Returns an error message, or null if saved successfully. */
   onSubmit: (data: AccountInput) => string | null;
   onClose: () => void;
 }
 
 export default function AccountForm({ type, account, onSubmit, onClose }: Props) {
   const isCash = type === 'cash';
-  const [name, setName] = useState(account?.name ?? (isCash ? 'Efectivo' : ''));
+  const [name, setName] = useState(account?.name ?? (isCash ? 'Cash' : ''));
   const [lastDigits, setLastDigits] = useState(account?.lastDigits ?? '');
   const [color, setColor] = useState<CardColor>(account?.color ?? (isCash ? 'emerald' : 'navy'));
   const [amount, setAmount] = useState(account ? centsToInput(account.initialBalance) : '');
@@ -23,29 +23,29 @@ export default function AccountForm({ type, account, onSubmit, onClose }: Props)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return setError('El nombre es obligatorio.');
-    if (lastDigits && !/^\d{4}$/.test(lastDigits)) return setError('Los últimos dígitos deben ser 4 números.');
+    if (!name.trim()) return setError('Name is required.');
+    if (lastDigits && !/^\d{4}$/.test(lastDigits)) return setError('Last digits must be 4 numbers.');
     const initialBalance = parseAmount(amount);
-    if (initialBalance === null) return setError('Ingresa un monto inicial válido (0 o mayor).');
+    if (initialBalance === null) return setError('Enter a valid starting balance (0 or more).');
 
     const result = onSubmit({ name, lastDigits, color, initialBalance });
     if (result) setError(result);
     else onClose();
   };
 
-  const title = account ? (isCash ? 'Editar efectivo' : 'Editar tarjeta') : isCash ? 'Agregar efectivo' : 'Nueva tarjeta';
+  const title = account ? (isCash ? 'Edit cash' : 'Edit card') : isCash ? 'Add cash' : 'New card';
 
   return (
     <Modal title={title} icon={isCash ? 'bi-cash-stack' : 'bi-credit-card-2-front'} onClose={onClose}>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="label" htmlFor="acc-name">
-            Nombre
+            Name
           </label>
           <input
             id="acc-name"
             className="input"
-            placeholder={isCash ? 'Efectivo' : 'Ej: BAC Débito, BCR Crédito…'}
+            placeholder={isCash ? 'Cash' : 'e.g. BAC Debit, BCR Credit…'}
             value={name}
             maxLength={30}
             autoFocus
@@ -56,7 +56,7 @@ export default function AccountForm({ type, account, onSubmit, onClose }: Props)
         {!isCash && (
           <div>
             <label className="label" htmlFor="acc-digits">
-              Últimos 4 dígitos <span className="font-normal text-slate-400">(opcional)</span>
+              Last 4 digits <span className="font-normal text-slate-400">(optional)</span>
             </label>
             <input
               id="acc-digits"
@@ -72,7 +72,7 @@ export default function AccountForm({ type, account, onSubmit, onClose }: Props)
 
         <div>
           <label className="label" htmlFor="acc-amount">
-            Monto inicial (₡)
+            Starting balance (₡)
           </label>
           <div className="relative">
             <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-slate-500">₡</span>
@@ -89,7 +89,7 @@ export default function AccountForm({ type, account, onSubmit, onClose }: Props)
           </div>
           {account && (
             <p className="mt-1 text-xs text-slate-500">
-              Cambiar el monto inicial recalcula el saldo. No se permite si el saldo quedaría negativo.
+              Changing the starting balance recalculates the balance. Not allowed if the balance would go negative.
             </p>
           )}
         </div>
@@ -117,10 +117,10 @@ export default function AccountForm({ type, account, onSubmit, onClose }: Props)
 
         <div className="flex justify-end gap-2 pt-2">
           <button type="button" className="btn-secondary" onClick={onClose}>
-            Cancelar
+            Cancel
           </button>
           <button type="submit" className="btn-primary">
-            <i className="bi bi-check-lg" /> {account ? 'Guardar' : 'Crear'}
+            <i className="bi bi-check-lg" /> {account ? 'Save' : 'Create'}
           </button>
         </div>
       </form>

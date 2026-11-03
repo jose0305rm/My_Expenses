@@ -8,7 +8,7 @@ import { centsToInput, formatCRC, parseAmount, todayISO } from '../utils';
 interface Props {
   type: TransactionType;
   transaction?: Transaction;
-  /** Saldo actual de la cuenta (en céntimos) */
+  /** Current account balance (in cents) */
   balance: number;
   onSubmit: (data: TransactionInput) => string | null;
   onClose: () => void;
@@ -21,24 +21,24 @@ export default function TransactionForm({ type, transaction, balance, onSubmit, 
   const [description, setDescription] = useState(transaction?.description ?? '');
   const [error, setError] = useState<string | null>(null);
 
-  // Saldo disponible para un gasto (si se edita, se "devuelve" el monto original)
+  // Balance available for an expense (when editing, the original amount is "given back")
   const available = isExpense && transaction ? balance + transaction.amount : balance;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const cents = parseAmount(amount);
-    if (cents === null || cents <= 0) return setError('Ingresa un monto mayor a cero.');
-    if (!date) return setError('La fecha es obligatoria.');
-    if (!description.trim()) return setError('La descripción es obligatoria.');
+    if (cents === null || cents <= 0) return setError('Enter an amount greater than zero.');
+    if (!date) return setError('Date is required.');
+    if (!description.trim()) return setError('Description is required.');
     if (isExpense && cents > available)
-      return setError(`Saldo insuficiente. Disponible: ${formatCRC(available)}.`);
+      return setError(`Insufficient balance. Available: ${formatCRC(available)}.`);
 
     const result = onSubmit({ type, amount: cents, date, description });
     if (result) setError(result);
     else onClose();
   };
 
-  const title = `${transaction ? 'Editar' : isExpense ? 'Registrar' : 'Agregar'} ${isExpense ? 'gasto' : 'saldo'}`;
+  const title = `${transaction ? 'Edit' : 'Add'} ${isExpense ? 'expense' : 'funds'}`;
 
   return (
     <Modal
@@ -49,13 +49,13 @@ export default function TransactionForm({ type, transaction, balance, onSubmit, 
       <form onSubmit={handleSubmit} className="space-y-4">
         {isExpense && (
           <div className="rounded-lg bg-navy-50 px-3 py-2 text-sm text-navy-800">
-            Saldo disponible: <strong>{formatCRC(available)}</strong>
+            Available balance: <strong>{formatCRC(available)}</strong>
           </div>
         )}
 
         <div>
           <label className="label" htmlFor="tx-amount">
-            Monto (₡)
+            Amount (₡)
           </label>
           <div className="relative">
             <span className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-slate-500">₡</span>
@@ -75,19 +75,19 @@ export default function TransactionForm({ type, transaction, balance, onSubmit, 
 
         <div>
           <label className="label" htmlFor="tx-date">
-            Fecha
+            Date
           </label>
           <input id="tx-date" className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
         </div>
 
         <div>
           <label className="label" htmlFor="tx-desc">
-            Descripción
+            Description
           </label>
           <input
             id="tx-desc"
             className="input"
-            placeholder={isExpense ? 'Ej: Supermercado, gasolina…' : 'Ej: Salario, transferencia…'}
+            placeholder={isExpense ? 'e.g. Groceries, gas…' : 'e.g. Salary, transfer…'}
             value={description}
             maxLength={80}
             onChange={(e) => setDescription(e.target.value)}
@@ -98,10 +98,10 @@ export default function TransactionForm({ type, transaction, balance, onSubmit, 
 
         <div className="flex justify-end gap-2 pt-2">
           <button type="button" className="btn-secondary" onClick={onClose}>
-            Cancelar
+            Cancel
           </button>
           <button type="submit" className={isExpense ? 'btn-danger' : 'btn-success'}>
-            <i className="bi bi-check-lg" /> Guardar
+            <i className="bi bi-check-lg" /> Save
           </button>
         </div>
       </form>

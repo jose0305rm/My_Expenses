@@ -5,12 +5,12 @@ interface Props {
   title: string;
   message: ReactNode;
   confirmLabel?: string;
-  /** Devuelve un mensaje de error para mostrarlo, o null si todo salió bien. */
+  /** Returns an error message to display, or null if everything went fine. */
   onConfirm: () => string | null | void;
   onClose: () => void;
 }
 
-export default function ConfirmDialog({ title, message, confirmLabel = 'Eliminar', onConfirm, onClose }: Props) {
+export default function ConfirmDialog({ title, message, confirmLabel = 'Delete', onConfirm, onClose }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   const handleConfirm = () => {
@@ -25,7 +25,7 @@ export default function ConfirmDialog({ title, message, confirmLabel = 'Eliminar
       {error && <ErrorAlert message={error} />}
       <div className="mt-6 flex justify-end gap-2">
         <button className="btn-secondary" onClick={onClose}>
-          Cancelar
+          Cancel
         </button>
         <button className="btn-danger" onClick={handleConfirm}>
           <i className="bi bi-trash3" /> {confirmLabel}
