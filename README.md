@@ -1,28 +1,26 @@
-# Control de Gastos
+# Expense Tracker
 
-Aplicación para controlar gastos por billeteras, tarjetas y efectivo, en colones costarricenses (₡).
+App for tracking expenses across wallets, cards and cash, in Costa Rican colones (₡).
 
 **Stack:** React + TypeScript + Vite · Tailwind CSS v4 · Bootstrap Icons
 
-## Ejecutar
+## Getting started
 
-```bash
-npm install   # solo la primera vez
+```
+npm install   # first time only
 npm run dev
 ```
 
-## Funcionalidades
+## Features
 
-- Billeteras (crear, editar, eliminar) con su saldo total.
-- Varias tarjetas por billetera y **una sola** cuenta de efectivo, cada una con un monto inicial.
-- Registrar gastos (rojo) y agregar saldo/abonos (verde) con monto, fecha y descripción; editarlos o eliminarlos.
-- Historial con filtros (todos / gastos / abonos) y resumen de totales.
-- Nunca se permite saldo negativo (al crear un gasto, editar montos o eliminar abonos).
+* Wallets (create, edit, delete), each showing its total balance.
+* Multiple cards per wallet and a single cash account, each with a starting balance.
+* Log expenses (red) and add funds/deposits (green) with amount, date and description; edit or delete them.
+* History with filters (all / expenses / deposits) and a totals summary.
+* Balances can never go negative (when adding an expense, editing amounts or deleting deposits).
 
-## Privacidad
+## Privacy
 
-No hay servidor ni base de datos: todo se guarda en el `localStorage` del navegador de cada visitante
-(clave `control-gastos:data:v1`). Si alguien abre el proyecto desde el portafolio, ve solo sus propios
-datos, y tú solo ves los tuyos.
+There is no server or database: everything is stored in each visitor's browser `localStorage` (key `control-gastos:data:v1`). Anyone who opens the project from the portfolio sees only their own data, and you see only yours.
 
-Los datos se pierden si el usuario borra los datos del navegador, y no se comparten entre dispositivos.
+Data is lost if the user clears their browser data, and it is not synced across devices.
