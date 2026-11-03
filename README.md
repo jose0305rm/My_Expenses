@@ -10,6 +10,8 @@ App for tracking expenses across wallets, cards and cash, in Costa Rican colones
 npm install   # first time only
 npm run dev
 ```
+or go to the next github pages url:
+https://jose0305rm.github.io/My_Expenses/
 
 ## Features
 
