@@ -1,0 +1,50 @@
+@import 'tailwindcss';
+
+/* Paleta azul marino (color principal) */
+@theme {
+  --color-navy-50: #eef3fb;
+  --color-navy-100: #d9e3f5;
+  --color-navy-200: #b6c8eb;
+  --color-navy-300: #87a3db;
+  --color-navy-400: #5577c4;
+  --color-navy-500: #3457a8;
+  --color-navy-600: #24418a;
+  --color-navy-700: #1c3470;
+  --color-navy-800: #142a5c;
+  --color-navy-900: #0f1f45;
+  --color-navy-950: #0a1530;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility input {
+  @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-navy-500 focus:ring-2 focus:ring-navy-200;
+}
+@utility label {
+  @apply mb-1 block text-sm font-medium text-slate-700;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-navy-800 text-white hover:bg-navy-700;
+}
+@utility btn-secondary {
+  @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+}
+@utility btn-danger {
+  @apply btn bg-red-600 text-white hover:bg-red-700;
+}
+@utility btn-success {
+  @apply btn bg-emerald-600 text-white hover:bg-emerald-700;
+}
+@utility icon-btn {
+  @apply inline-flex h-8 w-8 items-center justify-center rounded-lg transition;
+}
