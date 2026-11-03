@@ -1,4 +1,4 @@
-# Expense Tracker
+# My Expenses
 
 App for tracking expenses across wallets, cards and cash, in Costa Rican colones (₡).
 

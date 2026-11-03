@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               <i className="bi bi-wallet2" />
             </span>
             <div>
-              <h1 className="text-lg leading-tight font-bold">Expense Tracker</h1>
+              <h1 className="text-lg leading-tight font-bold">My Expenses</h1>
               <p className="text-xs text-navy-200">Costa Rican colones (₡)</p>
             </div>
           </a>
